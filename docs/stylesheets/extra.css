@@ -1,0 +1,190 @@
+/* Custom styling for Muto Link documentation */
+
+/* Brand colors and theme customization */
+:root {
+  --md-primary-fg-color: #2563eb;
+  --md-primary-fg-color--light: #3b82f6;
+  --md-primary-fg-color--dark: #1d4ed8;
+  --md-accent-fg-color: #0ea5e9;
+}
+
+/* Enhanced code blocks */
+.highlight pre {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom admonition for servo commands */
+.md-typeset .admonition.servo {
+  border-color: #0ea5e9;
+}
+
+.md-typeset .admonition.servo > .admonition-title {
+  background-color: rgba(14, 165, 233, 0.1);
+  border-color: #0ea5e9;
+}
+
+.md-typeset .admonition.servo > .admonition-title::before {
+  background-color: #0ea5e9;
+  mask-image: var(--md-admonition-icon--abstract);
+}
+
+/* Enhanced tables */
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Better spacing for parameter lists */
+.md-typeset dl {
+  margin: 1em 0;
+}
+
+.md-typeset dt {
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+  margin-top: 1em;
+}
+
+.md-typeset dd {
+  margin-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Enhanced navigation */
+.md-nav__title {
+  font-weight: 600;
+}
+
+/* Custom styling for API documentation */
+.api-signature {
+  background-color: var(--md-code-bg-color);
+  border-left: 4px solid var(--md-accent-fg-color);
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 0 8px 8px 0;
+  font-family: var(--md-code-font);
+  font-size: 0.9em;
+}
+
+/* Protocol frame visualization */
+.protocol-frame {
+  font-family: monospace;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  padding: 1em;
+  margin: 1em 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.protocol-frame .frame-part {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  margin: 0.125em;
+  border-radius: 4px;
+  background-color: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+/* Command examples styling */
+.command-example {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1em;
+  border-radius: 8px;
+  margin: 1em 0;
+  position: relative;
+}
+
+.command-example::before {
+  content: "$ ";
+  color: #22c55e;
+  font-weight: bold;
+}
+
+/* Speed guidelines table */
+.speed-table {
+  margin: 1em 0;
+}
+
+.speed-table td:first-child {
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+}
+
+/* Responsive improvements */
+@media screen and (max-width: 768px) {
+  .md-typeset table:not([class]) {
+    font-size: 0.8em;
+  }
+  
+  .protocol-frame {
+    font-size: 0.8em;
+    padding: 0.75em;
+  }
+  
+  .api-signature {
+    font-size: 0.8em;
+    padding: 0.75em;
+  }
+}
+
+/* Dark theme adjustments */
+[data-md-color-scheme="slate"] {
+  .protocol-frame {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+    border-color: #64748b;
+    color: #e2e8f0;
+  }
+  
+  .protocol-frame .frame-part {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .command-example {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+  }
+}
+
+/* Feature highlights on home page */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5em;
+  margin: 2em 0;
+}
+
+.feature-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5em;
+  transition: box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+  margin-top: 0;
+  color: var(--md-primary-fg-color);
+}
+
+/* Scroll to top button enhancement */
+.md-top {
+  background-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Better focus indicators for accessibility */
+.md-nav__link:focus,
+.md-search__input:focus {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}

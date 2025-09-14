@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+uv.lock
+
+# MkDocs
+site/
+
+# System files
+.DS_Store
+
+# IDE
+.vscode/
+
+# Environment & secrets
+.env*
+
+# Testing
+.pytest_cache/
+.coverage
+
+# Logs
+*.log
