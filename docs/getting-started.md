@@ -204,9 +204,7 @@ driver.write(addr, data)
 Now that you have basic servo control working:
 
 1. **[Basic Usage](user-guide/basic-usage.md)** - Learn all the available commands
-2. **[Advanced Usage](user-guide/advanced-usage.md)** - Multiple servos, calibration, and more
-3. **[CLI Guide](user-guide/cli.md)** - Master the command-line interface
-4. **[Raspberry Pi Setup](user-guide/raspberry-pi.md)** - Pi-specific features and GPIO
+2. **[CLI Guide](user-guide/cli.md)** - Master the command-line interface
 
 ## Complete Example
 

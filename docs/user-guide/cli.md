@@ -392,6 +392,4 @@ fi
 ## Next Steps
 
 - [Basic Usage](basic-usage.md) - Learn the Python API
-- [Advanced Usage](advanced-usage.md) - Complex servo control scenarios
-- [API Reference](../api-reference/driver.md) - Complete API documentation
-- [Examples](../examples/basic-servo-control.md) - Real-world examples
+- [API Reference](../api-reference/) - Complete API documentation

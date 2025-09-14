@@ -322,7 +322,5 @@ with Driver(UsbSerial("/dev/ttyUSB0")) as driver:
 
 Now that you understand basic usage:
 
-- [Advanced Usage](advanced-usage.md) - Complex scenarios and optimizations
 - [CLI Guide](cli.md) - Command-line interface for testing
-- [API Reference](../api-reference/driver.md) - Complete method documentation
-- [Examples](../examples/basic-servo-control.md) - Real-world usage examples
+- [API Reference](../api-reference/) - Complete method documentation

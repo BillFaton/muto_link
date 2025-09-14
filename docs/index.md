@@ -52,14 +52,13 @@ Ready to start controlling servos? Check out our guides:
 - [Installation](installation.md) - Get Muto Link installed on your system
 - [Quick Start](getting-started.md) - Your first servo control program
 - [Basic Usage](user-guide/basic-usage.md) - Learn the core concepts
-- [API Reference](api-reference/driver.md) - Complete API documentation
+- [API Reference](api-reference/) - Complete API documentation
 
 ## Community and Support
 
 - 📚 [Documentation](https://billfaton.github.io/muto_link/)
 - 🐛 [Issues](https://github.com/billfaton/muto_link/issues)
 - 💡 [Discussions](https://github.com/billfaton/muto_link/discussions)
-- 📖 [Contributing](development/contributing.md)
 
 ## License
 
