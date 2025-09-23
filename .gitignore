@@ -28,3 +28,9 @@ site/
 
 # Logs
 *.log
+
+SPEED_TEST_README.md
+speed_test.py
+speed_test_results.json
+speed_test_results.csv
+.gitignore

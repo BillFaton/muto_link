@@ -107,9 +107,9 @@ class TestDriver:
         # Should have written one frame
         assert len(transport.written_data) == 1
         
-        # Expected frame: 55 00 08 01 40 05 5A 01 90 C6 00 AA
-        # speed=400=0x0190, so speed_hi=0x01, speed_lo=0x90
-        expected = bytes([0x55, 0x00, 0x08, 0x01, 0x40, 0x05, 0x5A, 0x01, 0x90, 0xC6, 0x00, 0xAA])
+        # Expected frame: 55 00 0C 01 40 05 7F 01 90 9D 00 AA  
+        # angle=90° → protocol 127=0x7F, speed=400=0x0190, so speed_hi=0x01, speed_lo=0x90
+        expected = bytes([0x55, 0x00, 0x0C, 0x01, 0x40, 0x05, 0x7F, 0x01, 0x90, 0x9D, 0x00, 0xAA])
         assert transport.written_data[0] == expected
 
     def test_servo_move_clamping(self) -> None:
@@ -118,12 +118,12 @@ class TestDriver:
         driver = Driver(transport)
         
         with driver:
-            # Test angle clamping (angle > 180 should be clamped to 180)
+            # Test angle clamping (angle > 90 should be clamped to 90)
             driver.servo_move(servo_id=1, angle=200, speed=100)
         
         frame = transport.written_data[0]
-        # Extract angle from frame (position 6: servo_id=1, angle=180)
-        assert frame[6] == 180  # Angle should be clamped to 180
+        # Extract angle from frame (position 6: servo_id=1, angle=90 maps to protocol 127)
+        assert frame[6] == 127  # Angle 90° should map to protocol value 127
         
         transport.reset()
         

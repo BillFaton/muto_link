@@ -20,7 +20,8 @@ class Driver:
         >>> driver = Driver(transport)
         >>> with driver:
         ...     driver.torque_on()
-        ...     driver.servo_move(1, 90, 1000)
+        ...     driver.servo_move(1, 90, 1000)    # Positive angle
+        ...     driver.servo_move(2, -45, 500)    # Negative angle
     """
 
     def __init__(self, transport: Transport) -> None:
@@ -182,7 +183,7 @@ class Driver:
         
         Args:
             servo_id (int): Servo ID (1-18).
-            angle (int): Target angle in degrees (0-180), will be clamped to valid range.
+            angle (int): Target angle in degrees (-90 to +90), will be clamped to valid range.
             speed (int): Movement speed (0-65535), will be clamped to valid range.
             
         Raises:
@@ -190,22 +191,32 @@ class Driver:
             Exception: If communication fails.
             
         Example:
-            >>> driver.servo_move(5, 90, 1000)  # Move servo 5 to 90° at speed 1000
+            >>> driver.servo_move(5, 90, 1000)   # Move servo 5 to 90° at speed 1000
+            >>> driver.servo_move(1, -45, 500)  # Move servo 1 to -45° at speed 500
         """
         if not (1 <= servo_id <= 18):
             raise ValueError(f"Servo ID must be 1-18, got {servo_id}")
         
         # Clamp values to valid ranges
         original_angle, original_speed = angle, speed
-        angle = max(0, min(180, angle))
+        angle = max(-90, min(90, angle))
         speed = max(0, min(0xFFFF, speed))
         
         if original_angle != angle or original_speed != speed:
             logger.debug(f"Values clamped: angle {original_angle}->{angle}, speed {original_speed}->{speed}")
         
-        logger.info(f"Moving servo {servo_id} to {angle}° at speed {speed}")
+        # Map user angle range (-90 to +90) to protocol range (-128 to +127)
+        if angle < 0:
+            protocol_angle = round((angle / 90) * 128)
+        else:
+            protocol_angle = round((angle / 90) * 127)
+        
+        # Convert signed protocol angle to unsigned byte for transmission
+        angle_byte = protocol_angle & 0xFF
+        
+        logger.info(f"Moving servo {servo_id} to {angle}° (byte: {angle_byte}) at speed {speed}")
         speed_bytes = pack_uint16_be(speed)
-        data = [servo_id, angle, speed_bytes[0], speed_bytes[1]]
+        data = [servo_id, angle_byte, speed_bytes[0], speed_bytes[1]]
         self.write(addr=0x40, data=data)
 
     def read_servo_angle(self, servo_id: int) -> bytes:
