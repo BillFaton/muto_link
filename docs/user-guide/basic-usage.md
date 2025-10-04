@@ -318,6 +318,95 @@ with Driver(UsbSerial("/dev/ttyUSB0")) as driver:
     # ... your servo control code ...
 ```
 
+## IMU Sensor Data
+
+Muto Link provides both raw and parsed access to IMU sensor data from the baseboard.
+
+### Reading IMU Fusion Angles
+
+Get processed orientation data (roll, pitch, yaw) and temperature:
+
+```python
+from muto_link import Sensor, UsbSerial, IMUAngleData
+
+with Sensor(UsbSerial("/dev/ttyUSB0")) as sensor:
+    # Get parsed angle data
+    angle_data: IMUAngleData = sensor.get_imu_angle()
+    
+    print(f"Roll:  {angle_data.roll}")
+    print(f"Pitch: {angle_data.pitch}")
+    print(f"Yaw:   {angle_data.yaw}")
+    print(f"Temp:  {angle_data.temperature}")
+    
+    # Or get raw bytes if you need them
+    raw_bytes = sensor.read_IMU_angle()
+    print(f"Raw: {raw_bytes.hex()}")
+```
+
+### Reading Raw 9-Axis Data
+
+Access accelerometer, gyroscope, and magnetometer data:
+
+```python
+from muto_link import Sensor, UsbSerial, RawIMUData
+
+with Sensor(UsbSerial("/dev/ttyUSB0")) as sensor:
+    # Get parsed 9-axis sensor data
+    imu_data: RawIMUData = sensor.get_raw_imu_data()
+    
+    print("Accelerometer:")
+    print(f"  X: {imu_data.accel_x}")
+    print(f"  Y: {imu_data.accel_y}")
+    print(f"  Z: {imu_data.accel_z}")
+    
+    print("Gyroscope:")
+    print(f"  X: {imu_data.gyro_x}")
+    print(f"  Y: {imu_data.gyro_y}")
+    print(f"  Z: {imu_data.gyro_z}")
+    
+    print("Magnetometer:")
+    print(f"  X: {imu_data.mag_x}")
+    print(f"  Y: {imu_data.mag_y}")
+    print(f"  Z: {imu_data.mag_z}")
+```
+
+### Type Safety and Structure
+
+The parsed data uses `NamedTuple` classes for type safety and easy access:
+
+```python
+with Sensor(UsbSerial("/dev/ttyUSB0")) as sensor:
+    angle_data = sensor.get_imu_angle()
+    
+    # Type-safe field access
+    roll_value = angle_data.roll      # Always an int
+    temp_value = angle_data.temperature  # Always an int
+    
+    # Structured data is easy to work with
+    if angle_data.temperature > 25:
+        print("IMU is running warm")
+    
+    # Convert to dictionary if needed
+    angle_dict = angle_data._asdict()
+    print(angle_dict)  # {'roll': 4841, 'pitch': 63856, 'yaw': 2285, 'temperature': 20}
+```
+
+### CLI Usage for IMU Data
+
+Test IMU functionality from the command line:
+
+```bash
+# Get fusion angles (human-readable)
+muto imu --raw n --parsed --port /dev/cu.usbserial-1120
+
+# Get raw 9-axis data (human-readable)
+muto imu --raw y --parsed --port /dev/cu.usbserial-1120
+
+# Get raw bytes (for debugging)
+muto imu --raw n --port /dev/cu.usbserial-1120
+muto imu --raw y --port /dev/cu.usbserial-1120
+```
+
 ## Next Steps
 
 Now that you understand basic usage:

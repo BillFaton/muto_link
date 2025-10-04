@@ -9,6 +9,7 @@ import typer
 from typing_extensions import Annotated
 
 from muto_link.core.driver import Driver
+from muto_link.core.sensor import Sensor
 from muto_link.transports.usb_serial import UsbSerial
 from muto_link.transports.pi_uart_gpio import PiUartGpio
 from muto_link.logging import get_logger, set_global_log_level
@@ -171,12 +172,76 @@ def battery(
     
     try:
         transport = create_transport(backend, port, baud, dir_pin, log_level)
-        with Driver(transport) as driver:
-            response = driver.read_battery_level()
+        with Sensor(transport) as sensor:
+            response = sensor.read_battery_level()
             typer.echo(f"Battery level: {response}")
             logger.info(f"Battery level command completed: response={response.hex()}")
     except Exception as e:
         logger.error(f"Battery level command failed: {e}")
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+    
+@app.command()
+def imu(
+    raw: Annotated[str, typer.Option("--raw", help="IMU data type: 'y' for raw 9-axis, 'n' for fusion angles")] = "n",
+    parsed: Annotated[bool, typer.Option("--parsed", help="Parse and display data in human-readable format")] = False,
+    backend: Annotated[str, typer.Option("--backend", help="Transport backend to use")] = "usb",
+    port: Annotated[str, typer.Option("--port", help="Serial port (USB backend only)")] = "/dev/ttyUSB0",
+    baud: Annotated[int, typer.Option("--baud", help="Baud rate")] = 115200,
+    dir_pin: Annotated[Optional[int], typer.Option("--dir-pin", help="Direction control GPIO pin (Pi backend only)")] = None,
+    log_level: Annotated[Optional[str], typer.Option("--log-level", help="Log level (DEBUG, INFO, WARN, ERROR)")] = None,
+) -> None:
+    """Read IMU sensor data.
+    
+    Use --raw y for raw 9-axis sensor data (accelerometer, gyroscope, magnetometer).
+    Use --raw n for fusion-calculated angles (roll, pitch, yaw, temperature).
+    Add --parsed flag to get human-readable parsed values instead of raw bytes.
+    """
+    logger.info(f"IMU command: raw={raw}, parsed={parsed}")
+    
+    try:
+        transport = create_transport(backend, port, baud, dir_pin, log_level)
+        with Sensor(transport) as sensor:
+            if raw == "y":
+                # Raw 9-axis sensor data
+                if parsed:
+                    # Use new parsing method
+                    data = sensor.get_raw_imu_data()
+                    typer.echo("Raw IMU 9-Axis Data:")
+                    typer.echo(f"  Accelerometer: X={data.accel_x:5d}, Y={data.accel_y:5d}, Z={data.accel_z:5d}")
+                    typer.echo(f"  Gyroscope:     X={data.gyro_x:5d}, Y={data.gyro_y:5d}, Z={data.gyro_z:5d}")
+                    typer.echo(f"  Magnetometer:  X={data.mag_x:5d}, Y={data.mag_y:5d}, Z={data.mag_z:5d}")
+                    logger.info(f"Parsed raw IMU data: {data}")
+                else:
+                    # Original raw bytes output
+                    response = sensor.read_raw_IMU_angle()
+                    typer.echo(f"Raw IMU data: {response}")
+                    logger.info(f"Raw IMU polling completed: response={response.hex()}")
+            
+            elif raw == "n":
+                # Fusion angle data
+                if parsed:
+                    # Use new parsing method
+                    data = sensor.get_imu_angle()
+                    typer.echo("IMU Fusion Angles:")
+                    typer.echo(f"  Roll:        {data.roll:5d}")
+                    typer.echo(f"  Pitch:       {data.pitch:5d}")
+                    typer.echo(f"  Yaw:         {data.yaw:5d}")
+                    typer.echo(f"  Temperature: {data.temperature:3d}")
+                    logger.info(f"Parsed IMU angle data: {data}")
+                else:
+                    # Original raw bytes output
+                    response = sensor.read_IMU_angle()
+                    typer.echo(f"IMU angle: {response}")
+                    logger.info(f"IMU polling completed: response={response.hex()}")
+            
+            else:
+                logger.error(f"Invalid raw option: {raw}")
+                typer.echo(f"Error: Invalid --raw option '{raw}'. Use 'y' or 'n'.", err=True)
+                raise typer.Exit(1)
+    
+    except Exception as e:
+        logger.error(f"IMU command failed: {e}")
         typer.echo(f"Error: {e}", err=True)
         raise typer.Exit(1)
 

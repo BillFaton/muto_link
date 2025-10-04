@@ -11,6 +11,7 @@ Basic usage:
 """
 
 from .core.driver import Driver
+from .core.sensor import Sensor, IMUAngleData, RawIMUData
 from .transports.usb_serial import UsbSerial
 from .transports.pi_uart_gpio import PiUartGpio
 from .transports.base import Transport
@@ -20,6 +21,9 @@ __version__ = "0.1.0"
 
 __all__ = [
     "Driver",
+    "Sensor",
+    "IMUAngleData",
+    "RawIMUData",
     "UsbSerial", 
     "PiUartGpio",
     "Transport",
